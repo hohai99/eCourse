@@ -71,6 +71,14 @@
           type="text"
           placeholder={$t("findLesson")}
         />
+        {#if searchTerm}
+          <button on:click={() => (searchTerm = "")}>
+            <Icon
+              class="flex-shrink-0 text-xl text-white/50 transition hover:text-white"
+              icon="ph:x"
+            />
+          </button>
+        {/if}
         <button on:click={() => ($isSearchVisible = false)}>
           <Icon
             class="flex-shrink-0 rotate-45 text-xl text-white/50 transition hover:text-white"

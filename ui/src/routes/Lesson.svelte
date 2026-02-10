@@ -32,7 +32,6 @@
   export let lessonTitle;
 
   let loading = {};
-  let lessonVideo;
   let currentCourseStatus = "";
   let currentLessonTitle = "";
 
@@ -49,7 +48,7 @@
   });
 
   afterUpdate(() => {
-    lessonVideo = new Plyr("#lessonVideo", {
+    new Plyr("#lessonVideo", {
       invertTime: false,
       toggleInvert: false,
       captions: {
@@ -334,6 +333,7 @@
                     class="flex w-full max-w-[1280px] flex-1 flex-col gap-5 prose-headings:leading-tight prose-h1:text-50px prose-h2:text-40px prose-h3:text-30px prose-h4:text-25px prose-h5:text-20px prose-h6:text-18px prose-p:text-base prose-p:leading-relaxed prose-p:text-white/50 prose-a:text-base prose-a:text-main prose-a:underline prose-a:underline-offset-4 prose-blockquote:w-fit prose-blockquote:rounded-md prose-blockquote:border-l-2 prose-blockquote:border-l-white/50 prose-blockquote:bg-white/5 prose-blockquote:p-5 prose-strong:text-white prose-code:text-base prose-code:text-white/50 prose-ol:list-inside prose-ol:list-decimal prose-ol:space-y-2 prose-ol:text-base
                     prose-ul:list-inside prose-ul:list-disc prose-ul:space-y-2 prose-ul:text-base prose-img:w-full prose-img:rounded-md"
                   >
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                     {@html lesson.content}
                   </article>
                 </div>
@@ -361,7 +361,7 @@
                     <Icon class="flex-shrink-0" icon="ph:chats" />
                     FAQs
                   </h2>
-                  {#each $lesson_faqs as faq}
+                  {#each $lesson_faqs as faq (faq.id)}
                     {#if faq.lesson.includes(lesson.id)}
                       <button
                         on:click={() => (faq.isOpen = !faq.isOpen)}
@@ -403,7 +403,7 @@
                     <Icon class="flex-shrink-0" icon="ph:link" />
                     Resources
                   </h2>
-                  {#each $lesson_resources as resource}
+                  {#each $lesson_resources as resource (resource.id)}
                     {#if resource.lesson.includes(lesson.id)}
                       <a
                         href={resource.link}
@@ -429,7 +429,7 @@
                     <Icon class="flex-shrink-0" icon="ph:file" />
                     {$t("downloads")}
                   </h2>
-                  {#each lesson.downloads as download}
+                  {#each lesson.downloads as download (download)}
                     <a
                       href={pb.files.getUrl(lesson, download)}
                       download

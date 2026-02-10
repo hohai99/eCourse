@@ -16,11 +16,14 @@
   import { navigate } from "svelte-routing";
   import { tick } from "svelte";
   import { t } from "../lib/i18n";
+  import Modal from "./Modal.svelte";
 
   let isOpen = {};
   let loading = {};
   let openCourseId = "";
   let enableReactivity = true;
+  let showResetModal = false;
+  let courseToResetId = null;
 
   // only courses that match a progress record with "In Progress" status are set to open
   $: if (enableReactivity) {
@@ -133,6 +136,19 @@
       }
     }
   }
+
+  function confirmReset(courseId) {
+    courseToResetId = courseId;
+    showResetModal = true;
+  }
+
+  function handleResetConfirm() {
+    if (courseToResetId) {
+      resetProgress(courseToResetId);
+    }
+    showResetModal = false;
+    courseToResetId = null;
+  }
 </script>
 
 <section class="flex flex-1 flex-col gap-5 overflow-y-scroll bg-dark p-5">
@@ -244,7 +260,7 @@
                   {#if progressRecord.status === "Completed" || progressRecord.status === "In Progress"}
                     <button
                       on:click|stopPropagation
-                      on:click={() => resetProgress(course.id)}
+                      on:click={() => confirmReset(course.id)}
                       class={loading[course.id]
                         ? "pointer-events-none line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md px-4 py-2 text-red-400 opacity-50 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20 sm:w-full sm:flex-1 sm:px-0"
                         : "line-clamp-1 flex items-center justify-center gap-2 truncate rounded-md px-4 py-2 text-red-400 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20 sm:w-full sm:flex-1 sm:px-0"}
@@ -322,3 +338,17 @@
     {/each}
   {/if}
 </section>
+
+{#if showResetModal}
+  <Modal
+    title={$t("resetProgress")}
+    message="Are you sure you want to reset your progress? This action cannot be undone."
+    confirmText="Yes, Reset"
+    cancelText="Cancel"
+    on:confirm={handleResetConfirm}
+    on:cancel={() => {
+      showResetModal = false;
+      courseToResetId = null;
+    }}
+  />
+{/if}

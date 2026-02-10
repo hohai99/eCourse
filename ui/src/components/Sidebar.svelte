@@ -10,6 +10,7 @@
   import { pb, courses, resources, currentUser } from "../lib/pocketbase";
   import { navigate, useLocation } from "svelte-routing";
   import { t } from "../lib/i18n";
+  import Modal from "./Modal.svelte";
 
   export let isCoursesVisible = true;
 
@@ -17,12 +18,13 @@
   const { theme } = resolveConfig(tailwindConfig);
   const mainColor = theme.colors.main.slice(1);
   const location = useLocation();
+  let showLogoutModal = false;
 
   $: if ($location.pathname && window.innerWidth <= 1024) {
     isSidebarVisible.set(false);
   }
 
-  function logout() {
+  function confirmLogout() {
     pb.authStore.clear();
     navigate("/login");
   }
@@ -141,7 +143,7 @@
             {$t("RESOURCES")}
           </h3>
           <div>
-            {#each $resources as resource}
+            {#each $resources as resource (resource.id)}
               <a
                 class="line-clamp-1 w-full truncate rounded-md bg-transparent p-2 text-start text-white/50 transition hover:bg-white/10 hover:text-white"
                 href={resource.link}
@@ -166,7 +168,10 @@
       </div>
     {:else}
       <div class="flex items-center justify-between gap-5">
-        <div class="flex items-center gap-2">
+        <button
+          on:click={() => navigate("/profile")}
+          class="flex items-center gap-2 text-start transition hover:opacity-80"
+        >
           <img
             src={`https://api.dicebear.com/7.x/initials/svg?seed=${$currentUser.username}&backgroundColor=${mainColor}`}
             alt={`${$currentUser.username}'s profile avatar`}
@@ -180,9 +185,9 @@
               {$currentUser.email}
             </h4>
           </div>
-        </div>
+        </button>
         <button
-          on:click={logout}
+          on:click={() => (showLogoutModal = true)}
           class="flex items-center justify-center rounded-md bg-transparent p-2 text-red-400 outline outline-[1.5px] outline-red-400/20 transition hover:bg-red-400/20"
         >
           <Icon class="flex-shrink-0 text-base" icon="ph:sign-out" />
@@ -190,4 +195,15 @@
       </div>
     {/if}
   </aside>
+{/if}
+
+{#if showLogoutModal}
+  <Modal
+    title="Log Out"
+    message="Are you sure you want to log out?"
+    confirmText="Log Out"
+    cancelText="Cancel"
+    on:confirm={confirmLogout}
+    on:cancel={() => (showLogoutModal = false)}
+  />
 {/if}

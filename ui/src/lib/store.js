@@ -27,15 +27,6 @@ isSidebarVisible.subscribe((value) => {
   localStorage.setItem("isSidebarVisible", JSON.stringify(value));
 });
 
-// close sidebar when window resizes to 1024px
-window.addEventListener("resize", () => {
-  if (window.innerWidth <= 1024) {
-    isSidebarVisible.set(false);
-  } else {
-    isSidebarVisible.set(true);
-  }
-});
-
 // notifications alert UI
 export const alert = writable({ show: false, message: "", type: "" });
 
