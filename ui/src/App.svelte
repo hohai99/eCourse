@@ -7,6 +7,7 @@
   import Login from "./routes/Login.svelte";
   import MyCourses from "./routes/MyCourses.svelte";
   import Lesson from "./routes/Lesson.svelte";
+  import Profile from "./routes/Profile.svelte";
   import Search from "./components/Search.svelte";
   import Alert from "./components/Alert.svelte";
   import "./lib/i18n";
@@ -35,6 +36,7 @@
 <Router>
   <Route path="/" component={MyCourses} />
   <Route path="/login" component={Login} />
+  <Route path="/profile" component={Profile} />
   <Route path="/:lessonTitle" component={Lesson} />
   <Route component={NotFound} />
 </Router>

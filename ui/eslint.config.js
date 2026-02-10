@@ -18,6 +18,11 @@ export default [
     }
   },
   {
+    rules: {
+      'svelte/no-unused-svelte-ignore': 'off'
+    }
+  },
+  {
     ignores: ['dist/', '.svelte-kit/', 'node_modules/', '.env', '.env.*']
   }
 ];
