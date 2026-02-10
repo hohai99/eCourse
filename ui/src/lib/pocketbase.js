@@ -23,31 +23,21 @@ pb.authStore.onChange(() => {
 // function to fetch all the records from PocketBase
 export const fetchRecords = async () => {
   try {
-    const courseRecords = await pb.collection("courses").getFullList({
-      sort: "created",
-    });
-
-    const lessonRecords = await pb.collection("lessons").getFullList({
-      sort: "created",
-    });
-
-    const progressRecords = await pb.collection("progress").getFullList({
-      sort: "created",
-    });
-
-    const resourceRecords = await pb.collection("resources").getFullList({
-      sort: "created",
-    });
-
-    const lessonFaqsRecords = await pb.collection("lesson_faqs").getFullList({
-      sort: "created",
-    });
-
-    const lessonResourcesRecords = await pb
-      .collection("lesson_resources")
-      .getFullList({
-        sort: "created",
-      });
+    const [
+      courseRecords,
+      lessonRecords,
+      progressRecords,
+      resourceRecords,
+      lessonFaqsRecords,
+      lessonResourcesRecords,
+    ] = await Promise.all([
+      pb.collection("courses").getFullList({ sort: "created" }),
+      pb.collection("lessons").getFullList({ sort: "created" }),
+      pb.collection("progress").getFullList({ sort: "created" }),
+      pb.collection("resources").getFullList({ sort: "created" }),
+      pb.collection("lesson_faqs").getFullList({ sort: "created" }),
+      pb.collection("lesson_resources").getFullList({ sort: "created" }),
+    ]);
 
     courses.set(courseRecords);
     lessons.set(lessonRecords);
@@ -55,7 +45,7 @@ export const fetchRecords = async () => {
     resources.set(resourceRecords);
     lesson_faqs.set(lessonFaqsRecords);
     lesson_resources.set(lessonResourcesRecords);
-  } catch (error) {
+  } catch {
     showAlert("Failed to load data. Please try again", "fail");
   }
 };
@@ -70,7 +60,7 @@ export const updateProgressStatus = async (progressRecordId, newStatus) => {
       .collection("progress")
       .update(progressRecordId, data);
     return progressRecord;
-  } catch (error) {
+  } catch {
     showAlert("Failed to update course status. Please try again", "fail");
   }
 };
