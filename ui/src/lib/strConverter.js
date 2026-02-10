@@ -7,8 +7,10 @@ export function cleanFileName(inputFileName) {
 
   const dotIndex = cleanedFileName.lastIndexOf(".");
   if (dotIndex !== -1 && dotIndex >= 11) {
-    cleanedFileName =
-      cleanedFileName.slice(0, dotIndex - 11) + cleanedFileName.slice(dotIndex);
+    const prefix = cleanedFileName.slice(0, dotIndex - 11);
+    if (prefix.trim().length > 0) {
+      cleanedFileName = prefix + cleanedFileName.slice(dotIndex);
+    }
   }
 
   return cleanedFileName;

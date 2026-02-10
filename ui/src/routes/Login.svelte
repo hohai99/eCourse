@@ -40,7 +40,7 @@
       try {
         await pb.collection("users").authWithPassword(username, password);
         navigate("/");
-      } catch (err) {
+      } catch {
         loginError = true;
       }
       isLoading = false;

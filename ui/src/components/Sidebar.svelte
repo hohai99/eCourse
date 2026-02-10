@@ -141,7 +141,7 @@
             {$t("RESOURCES")}
           </h3>
           <div>
-            {#each $resources as resource}
+            {#each $resources as resource (resource.id)}
               <a
                 class="line-clamp-1 w-full truncate rounded-md bg-transparent p-2 text-start text-white/50 transition hover:bg-white/10 hover:text-white"
                 href={resource.link}
